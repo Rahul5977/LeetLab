@@ -67,12 +67,14 @@ export const login = async (req, res) => {
     });
     if (!user) {
       return res.status(401).json({
+        success:false,
         error: "User not found",
       });
     }
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(401).json({
+        success:false,
         error: "Invalid credentials",
       });
     }
@@ -86,6 +88,7 @@ export const login = async (req, res) => {
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
     res.status(200).json({
+      success:true,
       message: "User logged in successfully ",
       user: {
         id: user.id,
@@ -98,6 +101,7 @@ export const login = async (req, res) => {
   } catch (error) {
     console.error("Error logging in ", error);
     res.status(500).json({
+      success:false,
       error: "Error logging in",
     });
   }
@@ -108,21 +112,31 @@ export const logout = async (req, res) => {
       httpOnly: true,
       sameSite: "strict",
       secure: process.env.NODE_ENV !== "development",
-    })
+    });
     res.status(200).json({
-      success:true,
-      message:"User logged out"
-    })
+      success: true,
+      message: "User logged out",
+    });
   } catch (error) {
-    console.error("Error in logging out",error);
+    console.error("Error in logging out", error);
     res.status(500).json({
-      success:false,
-      error:"Error logged out user"
-    })
-    
-    
+      success: false,
+      error: "Error logged out user",
+    });
   }
 };
 export const check = async (req, res) => {
-  
+  try {
+    res.status(200).json({
+      success: true,
+      message: "user authenticated successfully",
+      user: req.user,
+    });
+  } catch (error) {
+    console.error("Error in check route ", error);
+    res.status(404).json({
+      success:false,
+      message: "Error in check route",
+    });
+  }
 };
