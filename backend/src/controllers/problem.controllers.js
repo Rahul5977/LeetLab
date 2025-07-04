@@ -59,7 +59,12 @@ export const createProblem = async (req, res) => {
       });
       return res.status(201).json(newProblem);
     }
-  } catch (error) {}
+  } catch (error) {
+    console.error("Error creating problem", error);
+    res.status(403).json({
+      error: "Error creating problem",
+    });
+  }
 };
 export const getAllProblem = async (req, res) => {};
 export const getAllProblemById = async (req, res) => {};
