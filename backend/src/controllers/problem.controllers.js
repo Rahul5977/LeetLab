@@ -28,13 +28,17 @@ export const createProblem = async (req, res) => {
         });
       }
       const submissions = testcases.map(({ input, output }) => ({
-        souce_code: solutionCode,
+        source_code: solutionCode,
         language_id: languageId,
         stdin: input,
         expected_output: output,
       }));
+      //submissions -> array of objects with these entities
+
       const submissionsResults = await submitBatch(submissions);
+      //returns a token
       const tokens = submissionsResults.map((res) => res.token);
+      //token extraced ..
       const results = await pollBatchResults(tokens);
       for (let i = 0; i < results.length; i++) {
         const result = results[i];
