@@ -19,6 +19,8 @@ export const createProblem = async (req, res) => {
   }
   try {
     for (const [language, solutionCode] of Object.entries(referenceSolutions)) {
+      //object.entries -> make key/value pair array
+      //{a:1,b:2,c:3}->[[a,1],[b,2],[c,3]]
       const languageId = getJudge0LanguageId(language);
       if (!languageId) {
         return res.status(400).json({
@@ -32,7 +34,7 @@ export const createProblem = async (req, res) => {
         expected_output: output,
       }));
       const submissionsResults = await submitBatch(submissions);
-      const tokens = submissions.map((res) => res.token);
+      const tokens = submissionsResults.map((res) => res.token);
       const results = await pollBatchResults(tokens);
       for (let i = 0; i < results.length; i++) {
         const result = results[i];
